@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block webcode %}
+<header class="masthead" style="background-image: url('static/img/home-bg.jpg')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="site-heading">
+                    <h1>Marketplace</h1>
+                    <span class="subheading">A place to sell any item.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container px-4 px-lg-5">
+  <div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-7">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+          </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <a class="mr-2" href="{{ url_for('user_listings', username=post.seller.username) }}">
+        <img class="rounded-circle article-img" src="{{ url_for('static', filename='images/' + post.seller.image_file) }}">
+        {{ post.seller.username }}
+      </a>
+      {% if post.seller == current_user %}
+        <a class="btn btn-secondary btn-sm m-1" href="{{ url_for('update_post', post_id=post.id) }}">Update</a>
+        <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+      {% endif %}
+      <div class="shadow p-3 mb-5 mt-3 bg-body-tertiary rounded">
+        <h2 class="article-title">{{ post.item }}</h2>
+        <small class="text-muted">{{ post.date_posted.strftime('%d-%m-%Y') }}</small>
+        <hr class="mb-3 mt-2">
+        <img class="img-fluid" src="{{ url_for('static', filename='images/' + post.item_image_file) }}">
+        <h3 class="article-content">{{ post.price }}</h3>
+        <p class="article-content">{{ post.desc }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete Listing?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>This listing will be permanently deleted.</p>
+      </div>
+      <div class="modal-footer">
+        <form class="" action="{{ url_for('delete_post', post_id=post.id) }}" method="post">
+          <input type="submit" class="btn btn-danger" value="Delete">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

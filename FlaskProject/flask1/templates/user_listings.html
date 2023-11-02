@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block webcode %}
+  <header class="masthead" style="background-image: url('static/img/profile-bg.jpg')">
+      <div class="container position-relative px-4 px-lg-5">
+          <div class="row gx-4 gx-lg-5 justify-content-center">
+              <div class="col-md-10 col-lg-8 col-xl-7">
+                  <div class="site-heading">
+                      <h1>{{ user.username }} is selling</h1>
+                      <span class="subheading">({{ posts.total }} items)</span>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </header>
+{% for post in posts.items %}
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+              {{ message }}
+            </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+          <a href="{{ url_for('user_listings', username=post.seller.username) }}">
+            <img class="rounded-circle img-thumbnail" width="100" src="{{ url_for('static', filename='images/' + post.seller.image_file) }}">
+            {{ post.seller.username }}
+          </a>
+          <div class="shadow p-3 mb-2 mt-3 bg-body-tertiary rounded">
+            <h2><a class="post-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.item }}</a></h2>
+            <small class="text-muted">{{ post.date_posted.strftime('%d-%m-%Y') }}</small>
+            <hr class="mb-3 mt-2">
+            <img class="img-fluid shadow-sm p-3 mb-2 bg-body-tertiary rounded" src="{{ url_for('static', filename='images/' + post.item_image_file) }}">
+            <h3 class="post-title">{{ post.price }}</h3>
+            <p class="post-subtitle">{{ post.desc }}</p>
+          </div>
+          <hr class="my-4">
+      </div>
+    </div>
+  </div>
+{% endfor %}
+<div class="d-flex justify-content-center mb-4">
+  {% for page_num in posts.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=1) %}
+    {% if page_num %}
+      {% if posts.page == page_num %}
+        <a class="btn" href="{{ url_for('user_listings', username=user.username, page=page_num) }}">{{ page_num }}</a>
+      {% else %}
+        <a class="btn font-weight-light" href="{{ url_for('user_listings', username=user.username, page=page_num) }}">{{ page_num }}</a>
+      {% endif %}
+    {% else %}
+    <div class="mt-2">
+      ...
+    </div>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}

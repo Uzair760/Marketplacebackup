@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block webcode %}
+      <header class="masthead" style="background-image: url('static/img/about-bg.jpg')">
+          <div class="container position-relative px-4 px-lg-5">
+              <div class="row gx-4 gx-lg-5 justify-content-center">
+                  <div class="col-md-10 col-lg-8 col-xl-7">
+                      <div class="page-heading">
+                          <h1>About Page</h1>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </header>
+      <main role="main" class="container">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                  {% for category, message in messages %}
+                  <div class="alert alert-{{ category }}">
+                    {{ message }}
+                  </div>
+                  {% endfor %}
+                {% endif %}
+              {% endwith %}
+              <div class="col-md-10 col-lg-8 col-xl-7">
+                <h4>Sell and buy items with zero hassle.</h4>
+                <p>Use the register button above to create an account and start selling. Or alternatively, browse through the many different items for sale.</p>
+                <p><b>Contact Us</b></p>
+                <p><b>Email: </b>uahmad760@gmail.com</p>
+                <p><b>Mobile: </b>+44 7491 988084</p>
+              </div>
+            </div>
+        </div>
+      </main>
+{% endblock %}
